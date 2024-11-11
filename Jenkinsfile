@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     sh "mkdir -p $WORKSPACE/.m2/repository"
-                    MavenUtils.build()
+                    maven.build()
                 }
             }
         }
