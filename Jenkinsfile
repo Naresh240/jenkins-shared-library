@@ -14,7 +14,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh "mkdir -p "$WORKSPACE/.m2/repository""
+                    sh "mkdir -p $WORKSPACE/.m2/repository"
                     mvn.build()
                 }
             }
