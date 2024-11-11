@@ -6,7 +6,7 @@ pipeline {
         stage("Checkout") {
             steps {
                 gitCheckout(
-                    url: 'https://github.com/Naresh240/springboot-hello.git',
+                    url: 'https://github.com/Naresh240/springboot-with-jenkins-shared-library.git',
                     branch: 'main'
                 )
             }
