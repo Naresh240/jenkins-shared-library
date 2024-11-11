@@ -30,7 +30,6 @@ pipeline {
             steps {
                 runSonarQubeScanner(
                     sonarServer: 'sonarqube-server', 
-                    sonarToken: 'sonar-token', 
                     toolName: 'sonar-scanner'
                 )
             }

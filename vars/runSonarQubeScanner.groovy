@@ -1,10 +1,9 @@
 def call(Map config = [:]) {
     def sonarServer = config.sonarServer
-    def sonarToken = config.sonarToken
     def toolName = config.toolName ?: 'sonar-scanner'
 
     stage('SonarQube Analysis') {
-        withSonarQubeEnv(installationName: sonarServer, credentialsId: sonarToken) {
+        withSonarQubeEnv(installationName: sonarServer) {
             // Run SonarScanner
             sh "${tool(toolName)}/bin/sonar-scanner"
         }
