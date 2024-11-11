@@ -14,7 +14,10 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    sh '''
+                    mkdir -p ${env.WORKSPACE}/.m2/repository
                     maven.build()
+                    '''
                 }
             }
         }
