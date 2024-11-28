@@ -6,5 +6,7 @@ def call() {
         error "Maven test failed with exit code: $exitCode"
     }
 
-    def unitTest = "junit '**/target/surefire-reports/*.xml'"
+    def unitTestReports = '**/target/surefire-reports/*.xml'
+
+    junit unitTestReports
 }
