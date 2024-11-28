@@ -6,7 +6,7 @@ pipeline {
         stage("Checkout") {
             steps {
                 gitCheckout(
-                    url: 'https://github.com/Naresh240/springboot-with-jenkins-shared-library.git',
+                    url: 'https://github.com/Naresh240/Springboot_Application_with_Junit_Testing.git',
                     branch: 'main'
                 )
             }
@@ -26,13 +26,13 @@ pipeline {
                 }
             }
         }
-        // stage('SonarQube Analysis') {
-        //     steps {
-        //         runSonarQubeScanner(
-        //             sonarServer: 'sonarqube-server', 
-        //             toolName: 'sonar-scanner'
-        //         )
-        //     }
-        // }
+        stage('SonarQube Analysis') {
+            steps {
+                runSonarQubeScanner(
+                    sonarServer: 'sonarqube-server', 
+                    toolName: 'sonar-scanner'
+                )
+            }
+        }
     }
 }
