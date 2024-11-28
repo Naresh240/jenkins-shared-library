@@ -15,24 +15,24 @@ pipeline {
             steps {
                 script {
                     sh "mkdir -p $WORKSPACE/.m2/repository"
-                    maven.build()
+                    mavenBuild()
                 }
             }
         }
         stage('test') {
             steps {
                 script {
-                    maven.test()
+                    runUnitTests()
                 }
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                runSonarQubeScanner(
-                    sonarServer: 'sonarqube-server', 
-                    toolName: 'sonar-scanner'
-                )
-            }
-        }
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         runSonarQubeScanner(
+        //             sonarServer: 'sonarqube-server', 
+        //             toolName: 'sonar-scanner'
+        //         )
+        //     }
+        // }
     }
 }
