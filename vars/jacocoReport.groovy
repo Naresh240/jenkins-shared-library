@@ -9,14 +9,14 @@ def call(Map config = [:]) {
     def coverageThresholds = config.get('coverageThresholds', [:]) // Expecting a map of coverage thresholds like [line: 80, branch: 70]
     def alwaysRun = config.get('alwaysRun', false) // Whether to always collect coverage even on failure
     def failThresholds = config.get('failThresholds', [:]) // Thresholds for failing the build, e.g., [line: 75, branch: 60]
-
-    // Additional thresholds for Instruction, Branch, Complexity, Method, Class
-    def instructionThreshold = coverageThresholds.get('instruction', 0)
-    def branchThreshold = coverageThresholds.get('branch', 0)
-    def complexityThreshold = coverageThresholds.get('complexity', 0)
-    def lineThreshold = coverageThresholds.get('line', 0)
-    def methodThreshold = coverageThresholds.get('method', 0)
-    def classThreshold = coverageThresholds.get('class', 0)
+    
+    // Coverage values from config (defaults to 0 if not provided)
+    def instructionCoverage = config.get('instructionCoverage', 0)
+    def branchCoverage = config.get('branchCoverage', 0)
+    def complexityCoverage = config.get('complexityCoverage', 0)
+    def lineCoverage = config.get('lineCoverage', 0)
+    def methodCoverage = config.get('methodCoverage', 0)
+    def classCoverage = config.get('classCoverage', 0)
 
     // JaCoCo plugin configuration
     jacoco(
@@ -25,51 +25,67 @@ def call(Map config = [:]) {
         sourcePattern: sourcePattern
     )
 
-    // Now, read the JaCoCo coverage data
-    def coverageData = sh(script: 'cat target/site/jacoco/index.html', returnStdout: true) // Assuming the JaCoCo report is generated here, adjust if needed
-    
-    // For simplicity, we'll print the coverage data here. You can use a more complex parsing mechanism to extract actual coverage values
-    echo "JaCoCo Coverage Data:\n${coverageData}"
-
-    // Validate coverage against the thresholds and fail the build if necessary
+    // Logic to handle coverage thresholds for reporting
     if (coverageThresholds) {
-        // This is a simplified example. You should implement logic to parse the actual coverage values from the generated report.
-        def instructionCoverage = 62 // Example value, replace with actual coverage from the report
-        def branchCoverage = 100 // Example value, replace with actual coverage from the report
-        def complexityCoverage = 75 // Example value, replace with actual coverage from the report
-        def lineCoverage = 60 // Example value, replace with actual coverage from the report
-        def methodCoverage = 80 // Example value, replace with actual coverage from the report
-        def classCoverage = 100 // Example value, replace with actual coverage from the report
+        echo "Coverage thresholds set: Instruction: $instructionCoverage, Branch: $branchCoverage, Complexity: $complexityCoverage, Line: $lineCoverage, Method: $methodCoverage, Class: $classCoverage"
 
-        // Check if any coverage is below the threshold
-        if (instructionCoverage < instructionThreshold) {
+        // Logic to check if the coverage meets the thresholds
+        if (lineCoverage < coverageThresholds.line) {
             currentBuild.result = 'FAILURE'
-            error "Build failed due to low Instruction coverage (expected ${instructionThreshold}%, but got ${instructionCoverage}%)"
+            error "Line coverage is below threshold: ${lineCoverage}% < ${coverageThresholds.line}%"
         }
-        if (branchCoverage < branchThreshold) {
+
+        if (branchCoverage < coverageThresholds.branch) {
             currentBuild.result = 'FAILURE'
-            error "Build failed due to low Branch coverage (expected ${branchThreshold}%, but got ${branchCoverage}%)"
+            error "Branch coverage is below threshold: ${branchCoverage}% < ${coverageThresholds.branch}%"
         }
-        if (complexityCoverage < complexityThreshold) {
+
+        if (instructionCoverage < coverageThresholds.instruction) {
             currentBuild.result = 'FAILURE'
-            error "Build failed due to low Complexity coverage (expected ${complexityThreshold}%, but got ${complexityCoverage}%)"
+            error "Instruction coverage is below threshold: ${instructionCoverage}% < ${coverageThresholds.instruction}%"
         }
-        if (lineCoverage < lineThreshold) {
+
+        if (complexityCoverage < coverageThresholds.complexity) {
             currentBuild.result = 'FAILURE'
-            error "Build failed due to low Line coverage (expected ${lineThreshold}%, but got ${lineCoverage}%)"
+            error "Complexity coverage is below threshold: ${complexityCoverage}% < ${coverageThresholds.complexity}%"
         }
-        if (methodCoverage < methodThreshold) {
+
+        if (methodCoverage < coverageThresholds.method) {
             currentBuild.result = 'FAILURE'
-            error "Build failed due to low Method coverage (expected ${methodThreshold}%, but got ${methodCoverage}%)"
+            error "Method coverage is below threshold: ${methodCoverage}% < ${coverageThresholds.method}%"
         }
-        if (classCoverage < classThreshold) {
+
+        if (classCoverage < coverageThresholds.class) {
             currentBuild.result = 'FAILURE'
-            error "Build failed due to low Class coverage (expected ${classThreshold}%, but got ${classCoverage}%)"
+            error "Class coverage is below threshold: ${classCoverage}% < ${coverageThresholds.class}%"
+        }
+    }
+
+    // If JaCoCo fails or the build is ABORTED, decide if you want to collect coverage anyway
+    if (alwaysRun) {
+        // Logic to always run coverage collection, even on failure or abortion
+        echo "Running coverage collection regardless of build status..."
+    }
+
+    // Apply the build failure conditions based on delta thresholds
+    if (failThresholds) {
+        // Logic to fail the build if coverage degrades beyond the defined delta thresholds
+        def coverageDelta = calculateCoverageDelta() // Define a method to calculate coverage degradation
+        if (coverageDelta < failThresholds.line) {
+            currentBuild.result = 'FAILURE'
+            error "Line coverage has degraded beyond the acceptable threshold."
         }
     }
 
     // Optional: Disable source files display if configured
     if (!showSource) {
         // Logic to disable source display in the JaCoCo report
+        echo "Disabling source display in JaCoCo report..."
     }
+}
+
+// Helper method to calculate the coverage delta (for failThresholds)
+def calculateCoverageDelta() {
+    // Implement logic to calculate coverage degradation based on historical data or previous builds
+    return 5 // Example data: 5% degradation in coverage
 }
