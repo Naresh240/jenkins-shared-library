@@ -1,5 +1,5 @@
 def call() {
-    def mvnCommand = 'mvn -X clean test'
+    def mvnCommand = 'mvn clean test -X'
     def exitCode = sh(script: mvnCommand, returnStatus: true)
 
     if (exitCode != 0) {
