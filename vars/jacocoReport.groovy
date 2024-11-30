@@ -10,6 +10,14 @@ def call(Map config = [:]) {
     def alwaysRun = config.get('alwaysRun', false) // Whether to always collect coverage even on failure
     def failThresholds = config.get('failThresholds', [:]) // Thresholds for failing the build, e.g., [line: 75, branch: 60]
     
+    // Additional thresholds for Instruction, Branch, Complexity, Method, Class
+    def instructionThreshold = coverageThresholds.get('instruction', 0)
+    def branchThreshold = coverageThresholds.get('branch', 0)
+    def complexityThreshold = coverageThresholds.get('complexity', 0)
+    def lineThreshold = coverageThresholds.get('line', 0)
+    def methodThreshold = coverageThresholds.get('method', 0)
+    def classThreshold = coverageThresholds.get('class', 0)
+
     // JaCoCo plugin configuration
     jacoco(
         execPattern: execPattern,
@@ -17,10 +25,10 @@ def call(Map config = [:]) {
         sourcePattern: sourcePattern
     )
 
-    // Handle coverage thresholds for reporting
+    // Logic to handle coverage thresholds for reporting
     if (coverageThresholds) {
-        // Add logic to handle coverage thresholds
-        // Example: You could use coverageThresholds['line'], coverageThresholds['branch'], etc.
+        // Implement coverage threshold checks here for Instruction, Branch, etc.
+        echo "Coverage thresholds set: Instruction: $instructionThreshold, Branch: $branchThreshold, Complexity: $complexityThreshold, Line: $lineThreshold, Method: $methodThreshold, Class: $classThreshold"
     }
 
     // If JaCoCo fails or the build is ABORTED, decide if you want to collect coverage anyway
