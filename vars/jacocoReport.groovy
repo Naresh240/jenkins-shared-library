@@ -74,13 +74,5 @@ def call(Map config = [:]) {
         maximumInstructionCoverage: maximumInstructionCoverage,
         maximumLineCoverage: maximumLineCoverage,
         maximumMethodCoverage: maximumMethodCoverage,
-
-        // Individual Coverage thresholds (optional)
-        instructionThreshold: instructionThreshold,
-        branchThreshold: branchThreshold,
-        complexityThreshold: complexityThreshold,
-        lineThreshold: lineThreshold,
-        methodThreshold: methodThreshold,
-        classThreshold: classThreshold
     )
 }
