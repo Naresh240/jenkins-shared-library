@@ -13,14 +13,6 @@ def call(Map config = [:]) {
     def buildOverBuild = config.get('buildOverBuild')  // Optional
     def changeBuildStatus = config.get('changeBuildStatus')  // Optional
 
-    // Coverage thresholds (optional, no default values)
-    def instructionThreshold = config.get('instructionThreshold')  // Optional
-    def branchThreshold = config.get('branchThreshold')  // Optional
-    def complexityThreshold = config.get('complexityThreshold')  // Optional
-    def lineThreshold = config.get('lineThreshold')  // Optional
-    def methodThreshold = config.get('methodThreshold')  // Optional
-    def classThreshold = config.get('classThreshold')  // Optional
-
     // Delta Thresholds (optional, no default values)
     def deltaBranchCoverage = config.get('deltaBranchCoverage')  // Optional
     def deltaClassCoverage = config.get('deltaClassCoverage')  // Optional
@@ -57,12 +49,6 @@ def call(Map config = [:]) {
         skipCopyOfSrcFiles: skipCopyOfSrcFiles,
         buildOverBuild: buildOverBuild,
         changeBuildStatus: changeBuildStatus,
-        instructionThreshold: instructionThreshold,
-        branchThreshold: branchThreshold,
-        complexityThreshold: complexityThreshold,
-        lineThreshold: lineThreshold,
-        methodThreshold: methodThreshold,
-        classThreshold: classThreshold,
         deltaBranchCoverage: deltaBranchCoverage,
         deltaClassCoverage: deltaClassCoverage,
         deltaComplexityCoverage: deltaComplexityCoverage,
