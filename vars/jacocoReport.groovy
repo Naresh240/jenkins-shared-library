@@ -6,11 +6,11 @@ def call(Map config = [:]) {
 
     def exclusionPattern = config.get('exclusionPattern')  // Optional, String
     def inclusionPattern = config.get('inclusionPattern')  // Optional, String
-    def runAlways = config.get('runAlways')  // Optional, Boolean
-    def skipCopyOfSrcFiles = config.get('skipCopyOfSrcFiles')  // Optional, Boolean
+    def runAlways = config.get('runAlways', true)  // Optional, Boolean (default true)
+    def skipCopyOfSrcFiles = config.get('skipCopyOfSrcFiles', false)  // Optional, Boolean (default false)
     def sourceExclusionPattern = config.get('sourceExclusionPattern')  // Optional, String
-    def buildOverBuild = config.get('buildOverBuild')  // Optional, Boolean
-    def changeBuildStatus = config.get('changeBuildStatus')  // Optional, Boolean
+    def buildOverBuild = config.get('buildOverBuild', false)  // Optional, Boolean (default false)
+    def changeBuildStatus = config.get('changeBuildStatus', false)  // Optional, Boolean (default false)
 
     // Delta Thresholds (optional, no default values)
     def deltaBranchCoverage = config.get('deltaBranchCoverage')  // Optional, Integer or String
@@ -36,28 +36,34 @@ def call(Map config = [:]) {
     def maximumLineCoverage = config.get('maximumLineCoverage')  // Optional, Integer or String
     def maximumMethodCoverage = config.get('maximumMethodCoverage')  // Optional, Integer or String
 
-    // Ensure coverage thresholds are passed as strings if necessary (if they're integers)
-    if (minimumBranchCoverage != null) {
-        minimumBranchCoverage = minimumBranchCoverage.toString()
-    }
-    if (minimumClassCoverage != null) {
-        minimumClassCoverage = minimumClassCoverage.toString()
-    }
-    if (minimumComplexityCoverage != null) {
-        minimumComplexityCoverage = minimumComplexityCoverage.toString()
-    }
-    if (minimumInstructionCoverage != null) {
-        minimumInstructionCoverage = minimumInstructionCoverage.toString()
-    }
-    if (minimumLineCoverage != null) {
-        minimumLineCoverage = minimumLineCoverage.toString()
-    }
-    if (minimumMethodCoverage != null) {
-        minimumMethodCoverage = minimumMethodCoverage.toString()
+    // Ensure coverage thresholds and delta values are passed as strings if necessary (if they're integers)
+    def convertToString = { value ->
+        value != null ? value.toString() : null
     }
 
+    minimumBranchCoverage = convertToString(minimumBranchCoverage)
+    minimumClassCoverage = convertToString(minimumClassCoverage)
+    minimumComplexityCoverage = convertToString(minimumComplexityCoverage)
+    minimumInstructionCoverage = convertToString(minimumInstructionCoverage)
+    minimumLineCoverage = convertToString(minimumLineCoverage)
+    minimumMethodCoverage = convertToString(minimumMethodCoverage)
+
+    maximumBranchCoverage = convertToString(maximumBranchCoverage)
+    maximumClassCoverage = convertToString(maximumClassCoverage)
+    maximumComplexityCoverage = convertToString(maximumComplexityCoverage)
+    maximumInstructionCoverage = convertToString(maximumInstructionCoverage)
+    maximumLineCoverage = convertToString(maximumLineCoverage)
+    maximumMethodCoverage = convertToString(maximumMethodCoverage)
+
+    deltaBranchCoverage = convertToString(deltaBranchCoverage)
+    deltaClassCoverage = convertToString(deltaClassCoverage)
+    deltaComplexityCoverage = convertToString(deltaComplexityCoverage)
+    deltaInstructionCoverage = convertToString(deltaInstructionCoverage)
+    deltaLineCoverage = convertToString(deltaLineCoverage)
+    deltaMethodCoverage = convertToString(deltaMethodCoverage)
+
     // Build Jacoco step with all parameters
-    jacoco(
+    jacocoReport(
         execPattern: execPattern,
         classPattern: classPattern,
         sourcePattern: sourcePattern,
