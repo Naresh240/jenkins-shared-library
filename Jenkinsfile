@@ -26,6 +26,17 @@ pipeline {
                 }
             }
         }
+        stage('CodeCoverage') {
+            steps {
+                script {
+                    jacocoReport(
+                        execPattern: '**/**.exec',
+                        classPattern: '**/classes',
+                        sourcePattern: '**/src/main/java'
+                    )
+                }
+            }
+        }
         stage('SonarQube Analysis') {
             steps {
                 runSonarQubeScanner(
