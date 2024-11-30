@@ -8,6 +8,7 @@ def call(Map config = [:]) {
     def alwaysRun = config.get('alwaysRun', false)
     def failThresholds = config.get('failThresholds', [:])
 
+    // Set coverage values (example, you should use actual coverage results here)
     def instructionCoverage = roundToTwoDecimalPlaces(config.get('instructionCoverage', 0))
     def branchCoverage = roundToTwoDecimalPlaces(config.get('branchCoverage', 0))
     def complexityCoverage = roundToTwoDecimalPlaces(config.get('complexityCoverage', 0))
@@ -15,14 +16,16 @@ def call(Map config = [:]) {
     def methodCoverage = roundToTwoDecimalPlaces(config.get('methodCoverage', 0))
     def classCoverage = roundToTwoDecimalPlaces(config.get('classCoverage', 0))
 
+    // Use the JaCoCo plugin to collect coverage data
     jacoco(
         execPattern: execPattern,
         classPattern: classPattern,
         sourcePattern: sourcePattern
     )
 
+    // After generating coverage, we should check the thresholds
     if (coverageThresholds) {
-        echo "Coverage thresholds set: Instruction: $instructionCoverage, Branch: $branchCoverage, Complexity: $complexityCoverage, Line: $lineCoverage, Method: $methodCoverage, Class: $classCoverage"
+        echo "Coverage thresholds set: Instruction: ${instructionCoverage}, Branch: ${branchCoverage}, Complexity: ${complexityCoverage}, Line: ${lineCoverage}, Method: ${methodCoverage}, Class: ${classCoverage}"
 
         if (lineCoverage < coverageThresholds.line) {
             currentBuild.result = 'FAILURE'
@@ -55,10 +58,12 @@ def call(Map config = [:]) {
         }
     }
 
+    // If alwaysRun is set to true, you can display a message
     if (alwaysRun) {
         echo "Running coverage collection regardless of build status..."
     }
 
+    // Handle the failThresholds logic
     if (failThresholds) {
         def coverageDelta = calculateCoverageDelta()
         if (coverageDelta < failThresholds.line) {
@@ -67,6 +72,7 @@ def call(Map config = [:]) {
         }
     }
 
+    // Optionally, disable source display in the JaCoCo report
     if (!showSource) {
         echo "Disabling source display in JaCoCo report..."
     }
