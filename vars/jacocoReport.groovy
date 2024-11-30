@@ -5,22 +5,9 @@ def call(Map config = [:]) {
     def classPattern = config.get('classPattern', '**/classes')
     def sourcePattern = config.get('sourcePattern', '**/src/main/java')
 
-    pipeline {
-        stages {
-            stage('JaCoCo Report') {
-                steps {
-                    jacoco(
-                        execPattern: execPattern,
-                        classPattern: classPattern,
-                        sourcePattern: sourcePattern
-                    )
-                }
-            }
-        }
-        post {
-            always {
-                jacoco()
-            }
-        }
-    }
+    jacoco(
+        execPattern: execPattern,
+        classPattern: classPattern,
+        sourcePattern: sourcePattern
+    )
 }
