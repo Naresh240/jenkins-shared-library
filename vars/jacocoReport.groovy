@@ -37,6 +37,7 @@ def call(Map config = [:]) {
     def maximumLineCoverage = config.get('maximumLineCoverage')  // Optional
     def maximumMethodCoverage = config.get('maximumMethodCoverage')  // Optional
 
+    echo "Received minimumBranchCoverage: ${config.get('minimumBranchCoverage')}"
     // Build Jacoco step with all parameters
     jacoco(
         execPattern: execPattern,
