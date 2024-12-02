@@ -1,4 +1,4 @@
-def push(Map stageParams) {
+def call(Map stageParams) {
     sh """
         docker login -u '$username' -p '$password'
         docker image push $stageParams.dockerUser/$stageParams.imageName:$stageParams.imageTag
