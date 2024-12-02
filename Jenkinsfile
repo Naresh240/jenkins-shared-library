@@ -2,11 +2,16 @@
 
 pipeline {
     agent any
+
+    environment {
+        DOCKER_CREDENTIALS = "dockerhub_secret"
+    }
+
     stages {
         stage("Checkout") {
             steps {
                 gitCheckout(
-                    url: 'https://github.com/Naresh240/Springboot_Application_with_Junit_Testing.git',
+                    url: 'https://github.com/Naresh240/springboot-with-jenkins-shared-library.git',
                     branch: 'main'
                 )
             }
@@ -43,6 +48,16 @@ pipeline {
                     sonarServer: 'sonarqube-server', 
                     toolName: 'sonar-scanner'
                 )
+            }
+        }
+        stage('Build_Docker_Image') {
+            steps {
+                withUserCredentials(env.DOCKER_CREDENTIALS) { username, password -> {
+                    dockerBuild(
+                        dockerUser: "naresh240"
+                        imageName: "springboothello", 
+                    )}
+                }
             }
         }
     }

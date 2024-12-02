@@ -1,14 +1,8 @@
-def call(String project, String hubUser) {
-    sh "docker image build -t ${hubUser}/${project} ."
-    sh "docker tag ${hubUser}/${project} ${hubUser}/${project}:${ImageTag}"
-    sh "docker tag ${hubUser}/${project} ${hubUser}/${project}:latest"
-    withCredentials([usernamePassword(
-            credentialsId: "docker",
-            usernameVariable: "USER",
-            passwordVariable: "PASS"
-    )]) {
-        sh "docker login -u '$USER' -p '$PASS'"
-    }
-    sh "docker image push ${hubUser}/${project}:${ImageTag}"
-    sh "docker image push ${hubUser}/${project}:latest"
+def call(Map stageParams) {
+    sh "docker image build -t ${stageParams.dockerUser}/${stageParams.imageName} ."
+    sh "docker tag ${stageParams.dockerUser}/${stageParams.imageName} ${stageParams.dockerUser}/${stageParams.imageName}:${ImageTag}"
+    sh "docker tag ${stageParams.dockerUser}/${stageParams.imageName} ${stageParams.dockerUser}/${stageParams.imageName}:latest"
+    sh "docker login -u '$username' -p '$password'"
+    sh "docker image push ${stageParams.dockerUser}/${stageParams.imageName}:${ImageTag}"
+    sh "docker image push ${stageParams.dockerUser}/${stageParams.imageName}:latest"
 }
