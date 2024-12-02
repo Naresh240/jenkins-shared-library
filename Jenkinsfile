@@ -52,11 +52,11 @@ pipeline {
         }
         stage('Build_Docker_Image') {
             steps {
-                withUserCredentials(env.DOCKER_CREDENTIALS) { username, password -> {
+                withUserCredentials(env.DOCKER_CREDENTIALS) { username, password -> 
                     dockerBuild(
                         dockerUser: "naresh240"
                         imageName: "springboothello", 
-                    )}
+                    )
                 }
             }
         }
