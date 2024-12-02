@@ -5,13 +5,13 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'DOCKER_USER', defaultValue: '', description: 'Docker Hub username')
-        string(name: 'IMAGE_NAME', defaultValue: '', description: 'Docker image name')
-        string(name: 'IMAGE_TAG', defaultValue: '', description: 'Docker image tag')
+        string(name: 'DOCKER_USER', defaultValue: 'naresh240', description: 'Docker Hub username')
+        string(name: 'IMAGE_NAME', defaultValue: 'springboothello', description: 'Docker image name')
+        string(name: 'IMAGE_TAG', defaultValue: 'v1', description: 'Docker image tag')
     }
 
     environment {
-        DOCKER_CREDENTIALS = "dockerhub_secret"
+        DOCKER_CREDENTIALS = 'dockerhub_secret'
     }
     
     stages {
@@ -53,6 +53,28 @@ pipeline {
             steps {
                 withUserCredentials(env.DOCKER_CREDENTIALS) { username, password -> 
                     dockerBuild(
+                        dockerUser: params.DOCKER_USER,
+                        imageName: params.IMAGE_NAME,
+                        imageTag: params.IMAGE_TAG
+                    )
+                }
+            }
+        }
+        stage("Scan_Docker_Image") {
+            steps {
+                script {
+                    dockerImageScan(
+                        dockerUser: params.DOCKER_USER,
+                        imageName: params.IMAGE_NAME,
+                        imageTag: params.IMAGE_TAG
+                    )
+                }
+            }
+        }
+        stage('Push_Docker_Image') {
+            steps {
+                withUserCredentials(env.DOCKER_CREDENTIALS) { username, password -> 
+                    dockerPush(
                         dockerUser: params.DOCKER_USER,
                         imageName: params.IMAGE_NAME,
                         imageTag: params.IMAGE_TAG
