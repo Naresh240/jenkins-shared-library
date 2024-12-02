@@ -1,4 +1,5 @@
-def call(String project, String hubUser) {
-    sh "docker rmi ${hubUser}/${project}:${ImageTag}"
-    sh "docker rmi ${hubUser}/${project}:latest"
+def call(Map stageParams) {
+    def command = "docker rmi ${stageParams.dockerUser}/${stageParams.imageName}:${stageParams.imageTag}"
+    echo "Executing: ${command}"
+    sh command
 }
